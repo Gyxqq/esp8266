@@ -18,5 +18,13 @@
     
     mqtt相关：
     类 PubSubClient(WiFiClient client )//创建一个pubsubclient对象，调用构造函数
-    client.setServer(char* server,int port);
+    client.setServer(char* server,int port);//设置mqtt服务器
+    bool client.connect(char* clientid,....);//用clientid连接服务器
+    void client.disconnnect()//断开连接
+    bool client.publish(const char[] topic,const char[] payload);//发布对应主题的消息
+    bool client.subscribe(char* topic,[int qos]);//订阅某个主题
+    bool unsubscribe(char* topic);
+    bool client.loop()//定期调用以确保 与服务器的连接和允许客户端处理传入的消息
+    bool client.connected()//检查是否与服务器连接
+    PubSubclient* client.setcallback(function* callback);//设置回调函数，接受到消息会调用该函数
     
