@@ -14,7 +14,7 @@
     Serial.readBytes(char* buffer, int length)//读取length字节放到buffer
     
     WIFI 相关：<ESP8266WiFi.h>
-    WiFi.begin(char* ssid,char* passwd);//链接WiFi
+    WiFi.begin(char* ssid,char* passwd);//连接WiFi
     
     
     mqtt相关：
