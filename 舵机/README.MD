@@ -8,8 +8,8 @@
     
     串口相关：
     Serial.begin(int i) //设置串行通信速率
-    Serial.print() //串行输出
-    Serial.println()  // 同上，多换行
+    Serial.print(char* a) //串行输出
+    Serial.println(char* a)  // 同上，多换行
     Serial.available() //返回缓冲区数据长度 
     Serial.read() //读取一个字符  
     Serial.readBytes(char* buffer, int length)//读取length字节放到buffer
