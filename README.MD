@@ -1,4 +1,3 @@
-以20ms为周期的脉冲，其中高电平占比在0.6-2.5ms之间，控制舵机正负90°旋转。
 
     一些arduino函数:
     delayMicroseconds(int i) //微秒级延时
