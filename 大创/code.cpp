@@ -3,6 +3,7 @@
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <Arduino.h>
+#include <math.h>
 #define region_num_now 6
 #define steer_num_now 2
 bool region_init(region *region0);                              // 初始化函数
@@ -17,11 +18,13 @@ struct region / 区域结构体
 public:
   int region_id;          // 区域编号
   int region_light;       // 区域亮度
+  int region_light_exp;   // 区域期望亮度
   int region_pin;         // 地区控制针脚
   int region_steer_pin;   // 地区舵机控制针脚
   int region_led_stats;   // 0-100 区域灯光亮度状态
   int region_steer_stats; // 地区百叶窗状态
   static int region_num;
+
 };
 /
     int region::region_num = region_num_now;
@@ -95,9 +98,9 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-  int light_now=0;
-  int light_exp=0;
-  int regio_id = 0;
+  int light_now = 0;
+  int light_exp = 0;
+  int region_id = 0;
   for (i = 0; i < length; i++)
   {
     if (topic[i] == '&')
@@ -108,19 +111,34 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
         i++;
       }
       i++;
-       while (topic[i] != '#')
+      while (topic[i] != '#')
       {
-       light_now+=light_now*10+topic[i]-'0';
+        light_now += light_now * 10 + topic[i] - '0';
         i++;
       }
       i++;
-       while (topic[i] != '&')
+      while (topic[i] != '&')
       {
-       light_exp+=light_exp*10+topic[i]-'0';
+        light_exp += light_exp * 10 + topic[i] - '0';
         i++;
       }
       i--;
+      // if (abs(light_exp - light_now) > 20)
+      // {
+      //   if (light_now < light_exp)
+      //   {
 
+      //     for(int i2=0;i2<region_num_now;i++){
+
+      //     }
+      //   }
+      // }
+      region_now[region_id].region_light = light_now;
+      region_now[region_id].region_exp=light_exp;
+      
     }
+  }
+  for(int i=0;i<region_num_now;i++){
+    region_now[i].
   }
 }
