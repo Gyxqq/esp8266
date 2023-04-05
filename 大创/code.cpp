@@ -6,6 +6,7 @@
 #include <math.h>
 #define region_num_now 6
 #define steer_num_now 2
+#define steer_light 1
 bool region_init(region *region0);                              // 初始化函数
 void reconnect();                                               // 断线重连
 void callback(char *topic, byte *payload, unsigned int length); // 消息处理
@@ -16,15 +17,15 @@ int steer_stats[steer_num_now] = {};                            // 0-90 表示�
 struct region / 区域结构体
 {
 public:
-  int region_id;          // 区域编号
-  int region_light;       // 区域亮度
-  int region_light_exp;   // 区域期望亮度
-  int region_pin;         // 地区控制针脚
-  int region_steer_pin;   // 地区舵机控制针脚
-  int region_led_stats;   // 0-100 区域灯光亮度状态
-  int region_steer_stats; // 地区百叶窗状态
+  int region_id;           // 区域编号
+  int region_light;        // 区域亮度
+  int region_light_exp;    // 区域期望亮度
+  int region_pin;          // 地区控制针脚
+  int region_steer_pin;    // 地区舵机控制针脚
+  int region_steer_pin_id; // 针脚编号
+  int region_led_stats;    // 0-100 区域灯光亮度状态
+  int region_steer_stats;  // 地区百叶窗状态
   static int region_num;
-
 };
 /
     int region::region_num = region_num_now;
@@ -64,11 +65,17 @@ bool region_init(region *region0)
   region0[4].region_pin = 5;
   region0[5].region_pin = 6;
   region0[0].region_steer_pin = 7;
-  region0[0].region_steer_pin = 7;
-  region0[0].region_steer_pin = 7;
-  region0[0].region_steer_pin = 7;
-  region0[0].region_steer_pin = 8;
-  region0[0].region_steer_pin = 8;
+  region0[1].region_steer_pin = 7;
+  region0[2].region_steer_pin = 7;
+  region0[3].region_steer_pin = 7;
+  region0[4].region_steer_pin = 8;
+  region0[5].region_steer_pin = 8;
+  region0[0].region_steer_pin_id = 0;
+  region0[1].region_steer_pin_id = 0;
+  region0[2].region_steer_pin_id = 0;
+  region0[3].region_steer_pin_id = 0;
+  region0[4].region_steer_pin_id = 1;
+  region0[5].region_steer_pin_id = 1;
   for (int i = 0; i < region_num_now; i++)
   {
     ledcAttachPin(region_now[i].region_pin, i);
@@ -134,11 +141,16 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
       //   }
       // }
       region_now[region_id].region_light = light_now;
-      region_now[region_id].region_exp=light_exp;
-      
-    }
+
+      region_now[region_id].region_exp = light_exp;
+        }
   }
-  for(int i=0;i<region_num_now;i++){
-    region_now[i].
+  int steer_light;
+
+  for (int i = 0; i < region_num_now; i++)
+  {
+    steer_light += region_now[i].light_exp;
   }
+  steer_light /= region_num_now;
+  
 }
