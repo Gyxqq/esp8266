@@ -3,7 +3,8 @@
     delay(int i) //毫秒级延迟
     digitalWrite(int pin,LOW/HIGH);//设置端口高低电平
     pinMode(int pin,INPUT/OUTPUT);//设置GPIO读或者写
-    
+     ledcAttachPin(GPIO, channel);      //输出pwm信号的GPIO，产生信号的通道。(对于esp32，通道在0-16之间)  
+    ledcWrite(channel, dutycycle);       // PWM信号的通道和占空比
 ## 串口相关：
     Serial.begin(int i) //设置串行通信速率
     Serial.print(char* a) //串行输出
