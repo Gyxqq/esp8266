@@ -4,7 +4,11 @@
     digitalWrite(int pin,LOW/HIGH);//设置端口高低电平
     pinMode(int pin,INPUT/OUTPUT);//设置GPIO读或者写
      ledcAttachPin(GPIO, channel);      //输出pwm信号的GPIO，产生信号的通道。(对于esp32，通道在0-16之间)  
-    ledcWrite(channel, dutycycle);       // PWM信号的通道和占空比
+    ledcWrite(channel, dutycycle);       // PWM信号的通道和占空比   
+    ledcSetup(Channel, freq, resolution);//设置pwm频道的pwm波频率和分辨率
+    resolution在1-16之间，表示分辨率为2^resolution 使用0-2^resolution调节亮度
+    对于控制led灯freq一般在5000
+
 ## 串口相关：
     Serial.begin(int i) //设置串行通信速率
     Serial.print(char* a) //串行输出
