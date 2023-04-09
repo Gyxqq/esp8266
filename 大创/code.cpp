@@ -118,21 +118,24 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-
   int light_now = 0;
   int light_exp = 0;
   int region_id = 0;
   Serial.print("gyx\n");
   Serial.println(length);
-  for (int i = 0; i < length; i++)Serial.print((char)payload[i]);
-    for (int i = 0; i < length; i++)
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+  }
+  for (int i = 0; i < length; i++)
   {
-    if (payload[i] == '&' &&payload[i+1] == '\"')break;
+
+    if (payload[i] == '&' && payload[i + 1] == '\"')break;
     if (payload[i] == '&')
     {
       i++;
       while (payload[i] != '#')
       {
+          Serial.print((char)payload[i]);
         Serial.print((char)payload[i]);
         region_id += region_id * 10 + payload[i] - '0';
         i++;
@@ -145,6 +148,8 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
         i++;
       }
       i++;
+      Serial.print("\nid=");
+      Serial.println(region_id);
       while (payload[i] != '&')
       {
         Serial.print((char)payload[i]);
@@ -156,6 +161,9 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
       region_now[region_id].region_light = light_now;
 
       region_now[region_id].region_light_exp = light_exp;
+//      region_id=0;
+//      light_now=0;
+//      light_exp=0;
     }
   } // 消息处理
 
@@ -202,8 +210,10 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
 
 void set_steer(int angl, int channel)
 {
+
   double a = angl * 0.9;
   a = 100 + a * 200 / 90;
   int c = a;
   ledcWrite(channel, c);
+
 }
