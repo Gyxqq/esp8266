@@ -4,6 +4,7 @@
 #include <Wire.h>
 #include <Arduino.h>
 #include <math.h>
+#include <esp_task_wdt.h>
 #define region_num_now 6
 #define steer_num_now 2
 //#define steer_light 1
@@ -11,7 +12,7 @@ bool region_init(); // 初始化函数
 void reconnect();
 void set_steer(int angl, int channel);                          // 断线重连
 void callback(char *topic, byte *payload, unsigned int length); // 消息处理
-const char *ssid = "G";                                         // wifi名称
+const char *ssid = "gyx_scu";                                         // wifi名称
 const char *password = "gyx200404";                             // wifi密码
 const char *mqtt_server = "120.46.204.140";                     // mqtt服务器地址，如本地ip192.168.31.22
 int steer_stats[steer_num_now] = {};
@@ -83,7 +84,7 @@ bool region_init()
   for (int i = 0; i < region_num_now; i++)
   {
     ledcAttachPin(region_now[i].region_pin, i);
-    ledcSetup(i, 5000, 8); // 设置pwm频道和分辨率
+    ledcSetup(i, 5000, 8); // 设置led pwm频道和分辨率
     region_now[i].pwm_channel = i;
   }
   steer_channel[0] = 6;
@@ -101,7 +102,7 @@ void reconnect()
     if (client.connect("ESP8266 Client1"))
     {
       Serial.println("connected");
-      client.subscribe("test"); //
+      client.subscribe("test"); 
     }
     else
     {
@@ -129,24 +130,28 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
   for (int i = 0; i < length; i++)
   {
 
+    esp_task_wdt_reset();
     if (payload[i] == '&' && payload[i + 1] == '\"')break;
     if (payload[i] == '&')
     {
       i++;
       while (payload[i] != '#')
       {
-          Serial.print((char)payload[i]);
+
         Serial.print((char)payload[i]);
         region_id += region_id * 10 + payload[i] - '0';
         i++;
       }
+      Serial.print((char)payload[i]);
       i++;
       while (payload[i] != '#')
       {
+         esp_task_wdt_reset();
         Serial.print((char)payload[i]);
         light_now += light_now * 10 + payload[i] - '0';
         i++;
       }
+      Serial.print((char)payload[i]);
       i++;
       Serial.print("\nid=");
       Serial.println(region_id);
@@ -156,14 +161,15 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
         light_exp += light_exp * 10 + payload[i] - '0';
         i++;
       }
+      Serial.print((char)payload[i]);
       i--;
 
       region_now[region_id].region_light = light_now;
 
       region_now[region_id].region_light_exp = light_exp;
-//      region_id=0;
-//      light_now=0;
-//      light_exp=0;
+      region_id = 0;
+      light_now = 0;
+      light_exp = 0;
     }
   } // 消息处理
 
@@ -174,19 +180,25 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
     int num = 0;
     int steer_light = 0;
   } steer_light[steer_num_now];
+  
   Serial.print("gyx\n");
   for (int i = 0; i < region_num_now; i++)
   {
     steer_light[region_now[i].region_steer_pin_id].steer_light += region_now[i].region_light_exp;
     steer_light[region_now[i].region_steer_pin_id].num++;
   }
+    Serial.print("gyx1\n");
   for (int i = 0; i < steer_num_now; i++)
   {
     steer_light[i].steer_light /= steer_light[i].num;
     set_steer(steer_light[i].steer_light, steer_channel[i]);
   } // 计算舵机的角度
+      Serial.print("gyx2\n");
+      delay(500);
   for (int i = 0; i < region_num_now; i++)
   {
+//     delay(500);
+     Serial.print("gyx3\n");
     if (abs(region_now[i].region_light - region_now[i].region_light_exp) < 20)
       continue;
     if (region_now[i].region_light - region_now[i].region_light_exp > 0)
@@ -206,14 +218,18 @@ void callback(char *topic, byte *payload, unsigned int length) // 消息处理
       }
     }
   } // led亮度调整
+  Serial.print("gyx4\n");
 }
 
 void set_steer(int angl, int channel)
 {
 
-  double a = angl * 0.9;
-  a = 100 + a * 200 / 90;
-  int c = a;
+  double a = (angl * 0.9);
+  a = 150 + a * 20 / 90;
+  int c = a; 
+  Serial.print(channel);
+  Serial.print("\t");
+  Serial.println(c);
   ledcWrite(channel, c);
 
 }
