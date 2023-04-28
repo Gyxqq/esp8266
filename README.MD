@@ -48,4 +48,5 @@ esp8266的软件SPI的端口不能乱接，比如：
 #define TFT_RST   12
 
 ```
+[见图] (https://raw.githubusercontent.com/Gyxqq/esp8266/main/esp8266spi.webp)
 
