@@ -33,3 +33,18 @@
     PubSubclient* client.setcallback(function* callback);//设置回调函数，接受到消息会调用该函数
     void callback(const char[] topic, byte* payload, unsigned int length)//回调函数
     
+## ESP8266 SPI踩坑
+[链接](https://www.jianshu.com/p/c1d316ef6e8f)
+esp8266的软件SPI的端口不能乱接，比如：
+- GPIO2不能用作SDA
+- GPIO0不能使用
+- 丝印和实际GPIO不同
+贴个我自己的接线
+```CPP
+#define TFT_MOSI 13
+#define TFT_SCLK 14
+#define TFT_CS   5  // Chip select control pin
+#define TFT_DC    4  // Data Command control pin
+#define TFT_RST   12
+
+```
