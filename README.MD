@@ -34,7 +34,7 @@
     void callback(const char[] topic, byte* payload, unsigned int length)//回调函数
     
 ## ESP8266 SPI踩坑
-[链接](https://www.jianshu.com/p/c1d316ef6e8f)
+[链接](https://www.jianshu.com/p/c1d316ef6e8f)  
 esp8266的软件SPI的端口不能乱接，比如：
 - GPIO2不能用作SDA
 - GPIO0不能使用
@@ -48,5 +48,5 @@ esp8266的软件SPI的端口不能乱接，比如：
 #define TFT_RST   12
 
 ```
-[见图] (https://raw.githubusercontent.com/Gyxqq/esp8266/main/esp8266spi.webp)
+[见图](https://raw.githubusercontent.com/Gyxqq/esp8266/main/esp8266spi.webp)
 
