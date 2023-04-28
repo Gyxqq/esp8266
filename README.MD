@@ -38,7 +38,7 @@
 esp8266的软件SPI的端口不能乱接，比如：
 - GPIO2不能用作SDA
 - GPIO0不能使用
-- 丝印和实际GPIO不同
+- 丝印和实际GPIO不同  
 贴个我自己的接线
 ```CPP
 #define TFT_MOSI 13
@@ -48,3 +48,4 @@ esp8266的软件SPI的端口不能乱接，比如：
 #define TFT_RST   12
 
 ```
+
